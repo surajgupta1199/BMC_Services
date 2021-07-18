@@ -1,0 +1,11 @@
+.flash-new-first {
+    
+    right: 1095px;
+    bottom: 263px;
+    background: url(/com.sap.portal.resourcerepository/repo/theming/UR/ur/MCGMTEST/icon_new1.gif) no-repeat 0 0;
+    text-indent: -9999px;
+    width: 65px;
+    height: 21px;
+    display: inline-block;
+}
+//position: absolute;

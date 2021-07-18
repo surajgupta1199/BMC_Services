@@ -1,0 +1,483 @@
+<!-- <?php
+
+// this code block contains some test stuff
+$lat_d = 19.1853779;
+$long_d = 72.8584758;
+
+// mimic a result array from MySQL
+$result = (array('latitude'=>$lat_d,'longitude'=>$long_d));
+/*print_r($result);
+die;
+*/
+?>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+ <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDdtgWFU9eL69O8PFeCvteKvfOepX6W2Y8&libraries=places&sensor=false"></script>
+<div id="my_Map"></div>
+  <body onload="initialize()">
+  </body>
+<style>
+  #my_Map{
+  height: 600px;
+  width: 800px;
+  margin: 0px;
+  padding: 0px
+}
+</style>
+<script>
+  function initialize(){
+     <?php
+            // uncomment the 2 lines below to get real data from the db
+            // $result = mysql_query("SELECT * FROM parkings");
+            // while ($row = mysql_fetch_array($result))
+            foreach($data as $row) // <- remove this line
+                echo "addMarker(new google.maps.LatLng(".$row['location_latitude'].", ".$row['location_longitude']."), map);";
+        ?>
+  }
+var map;
+var Latlng = new google.maps.LatLng(<?php echo $lat_d; ?>, <?php echo $long_d; ?>);
+/*var address = */
+var myOptions = {
+  zoom: 13,
+  center: Latlng,
+  mapTypeId: google.maps.MapTypeId.ROADMAP
+}
+var map = new google.maps.Map(document.getElementById("my_Map"), myOptions);
+var geocoder = new google.maps.Geocoder();
+
+google.maps.event.addListener(map, 'click', function(event) {
+  geocoder.geocode({
+    'latLng': event.latLng
+  }, function(results, status) {
+    if (status == google.maps.GeocoderStatus.OK) {
+      if (results[0]) {
+        alert(results[0].formatted_address);
+      }
+    }
+  });
+});
+var marker;
+function addMarker(Latlng,my_Map){
+    marker = new google.maps.Marker({
+    position: Latlng,
+    /*title: address,*/
+    map: map,
+    animation: google.maps.Animation.DROP
+  });
+}
+google.maps.event.addListener(marker, 'click', function(event) {
+  alert("hiii");
+  geocoder.geocode({
+    'latLng': event.latLng
+  }, function(results, status) {
+    if (status == google.maps.GeocoderStatus.OK) {
+      if (results[0]) {
+        alert(results[0].formatted_address);
+      }
+    }
+  });
+});
+</script> -->
+<!-- <?
+$xml = new DOMDocument("1.0");
+$markers = $xml->createElement("markers");
+$xml->appendChild($markers);
+foreach($data as $row){
+  $marker = $xml->createElement("marker");
+  $markers->appendChild($marker);
+
+  $id = $xml->createAttribute("id");
+  $marker->appendChild($id);
+
+  // create attribute value node
+  $idvalue = $xml->createTextNode($row['id']);
+  $id->appendChild($idvalue);
+
+  $name = $xml->createAttribute("name");
+  $marker->appendChild($name);
+
+  // create attribute value node
+  $namevalue = $xml->createTextNode($row['service_head']);
+  $name->appendChild($namevalue);
+
+  // create attribute node
+  $address = $xml->createAttribute("address");
+  $marker->appendChild($address);
+
+  // create value element
+  $addressValue = $xml->createTextNode($row['store_ref_address']);
+  $address->appendChild($addressValue);
+
+  // create attribute node
+  $lat = $xml->createAttribute("lat");
+  $marker->appendChild($lat);
+
+  // create attribute value node
+  $latValue = $xml->createTextNode($row['location_longitude']);
+  $lat->appendChild($latValue);
+
+  // create attribute node
+  $lng = $xml->createAttribute("lng");
+  $marker->appendChild($lng);
+
+  // create attribute value node
+  $lngValue = $xml->createTextNode($row['location_latitude']);
+  $lng->appendChild($lngValue);
+
+  $type = $xml->createAttribute("type");
+  $marker->appendChild($type);
+
+  // create attribute value node
+  $typevalue = $xml->createTextNode($row['state']);
+  $type->appendChild($typevalue);
+
+}
+
+echo "<xmp>".$xml->saveXML()."</xmp>";
+//$xml->save("Reports.xml");
+?> -->
+<div id="map">
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDdtgWFU9eL69O8PFeCvteKvfOepX6W2Y8&libraries=places&sensor=false&callback=loadMap"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<style type="text/css">
+<style>
+  /*.container {
+    height: 450px;
+  }*/
+  #map {
+    width: 100%;
+    height: 100%;
+    border: 1px solid blue;
+  }
+  /*#data, #allData {
+    display: none;
+  }*/
+  </style>
+<script>
+var map;
+var geocoder;
+
+function loadMap() {
+  var pune = {lat: 18.5204, lng: 73.8567};
+    map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 12,
+      center: pune
+    });
+
+    var marker = new google.maps.Marker({
+      position: pune,
+      map: map
+    });
+
+   /* var cdata = JSON.parse(document.getElementById('data').innerHTML);
+    geocoder = new google.maps.Geocoder();  
+    codeAddress(cdata);
+
+    var allData = JSON.parse(document.getElementById('allData').innerHTML);
+    showAllColleges(allData)*/
+}
+
+/*function showAllColleges(allData) {
+  var infoWind = new google.maps.InfoWindow;
+  Array.prototype.forEach.call(allData, function(data){
+    var content = document.createElement('div');
+    var strong = document.createElement('strong');
+    
+    strong.textContent = data.name;
+    content.appendChild(strong);
+
+    var img = document.createElement('img');
+    img.src = 'img/Leopard.jpg';
+    img.style.width = '100px';
+    content.appendChild(img);
+
+    var marker = new google.maps.Marker({
+        position: new google.maps.LatLng(data.lat, data.lng),
+        map: map
+      });
+
+      marker.addListener('mouseover', function(){
+        infoWind.setContent(content);
+        infoWind.open(map, marker);
+      })
+  })
+}
+
+function codeAddress(cdata) {
+   Array.prototype.forEach.call(cdata, function(data){
+      var address = data.name + ' ' + data.address;
+      geocoder.geocode( { 'address': address}, function(results, status) {
+        if (status == 'OK') {
+          map.setCenter(results[0].geometry.location);
+          var points = {};
+          points.id = data.id;
+          points.lat = map.getCenter().lat();
+          points.lng = map.getCenter().lng();
+          updateCollegeWithLatLng(points);
+        } else {
+          alert('Geocode was not successful for the following reason: ' + status);
+        }
+      });
+  });
+}
+
+function updateCollegeWithLatLng(points) {
+  $.ajax({
+    url:"action.php",
+    method:"post",
+    data: points,
+    success: function(res) {
+      console.log(res)
+    }
+  })
+  }*/
+</script>
+
+
+
+
+
+
+
+
+<!-- <?php 
+  
+  class education {
+    private $id;
+    private $address;
+    private $lat;
+    private $lng;
+    private $conn;
+    private $tableName = "service_registration";
+
+    function setId($id) { $this->id = $id;}
+    function getId() { return $this->id; }
+    function setAddress($address) { $this->store_ref_address = $address; }
+    function getAddress() { return $this->store_ref_address; }
+    function setLat($lat) { $this->location_latitude = $lat; }
+    function getLat() { return $this->location_latitude; }
+    function setLng($lng) { $this->location_longitude = $lng; }
+    function getLng() { return $this->location_longitude; }
+
+    public function __construct() {
+      require_once('db/DbConnect.php');
+      $conn = new DbConnect;
+      $this->conn = $conn->connect();
+    }
+
+    public function getCollegesBlankLatLng() {
+      $sql = "SELECT * FROM $this->tableName WHERE location_latitude IS NULL AND location_longitude IS NULL";
+      $stmt = $this->conn->prepare($sql);
+      $stmt->execute();
+      return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getAllColleges() {
+      $sql = "SELECT * FROM $this->tableName";
+      $stmt = $this->conn->prepare($sql);
+      $stmt->execute();
+      return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // public function updateCollegesWithLatLng() {
+    //  $sql = "UPDATE $this->tableName SET lat = :lat, lng = :lng WHERE id = :id";
+    //  $stmt = $this->conn->prepare($sql);
+    //  $stmt->bindParam(':lat', $this->lat);
+    //  $stmt->bindParam(':lng', $this->lng);
+    //  $stmt->bindParam(':id', $this->id);
+
+    //  if($stmt->execute()) {
+    //    return true;
+    //  } else {
+    //    return false;
+    //  }
+    // }
+  }
+
+?> -->
+
+
+
+<!-- <?php 
+  class DbConnect {
+    private $host = 'localhost';
+    private $dbName = 'softech1_bmc_service';
+    private $user = 'root';
+    private $pass = '';
+
+    public function connect() {
+      try {
+        $conn = new PDO('mysql:host=' . $this->host . '; dbname=' . $this->dbName, $this->user, $this->pass);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        return $conn;
+      } catch( PDOException $e) {
+        echo 'Database Error: ' . $e->getMessage();
+      }
+    }
+  }
+ ?> -->
+
+
+
+
+<!--  var map;
+var geocoder;
+
+function loadMap() {
+  var pune = {lat: 18.5204, lng: 73.8567};
+    map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 12,
+      center: pune
+    });
+
+    var marker = new google.maps.Marker({
+      position: pune,
+      map: map
+    });
+
+    var cdata = JSON.parse(document.getElementById('data').innerHTML);
+    geocoder = new google.maps.Geocoder();  
+    codeAddress(cdata);
+    console.log(cdata);
+
+    var allData = JSON.parse(document.getElementById('allData').innerHTML);
+    console.log(allData);
+    showAllColleges(allData)
+}
+
+function showAllColleges(allData) {
+  var infoWind = new google.maps.InfoWindow;
+  Array.prototype.forEach.call(allData, function(data){
+    var content = document.createElement('div');
+    var strong = document.createElement('strong');
+    
+    strong.textContent = data.address;
+    content.appendChild(strong);
+
+    var img = document.createElement('img');
+    img.src = 'img/Leopard.jpg';
+    img.style.width = '100px';
+    content.appendChild(img);
+
+    var marker = new google.maps.Marker({
+        position: new google.maps.LatLng(data.lat, data.lng),
+        map: map
+      });
+
+      marker.addListener('mouseover', function(){
+        infoWind.setContent(content);
+        infoWind.open(map, marker);
+      })
+  })
+}
+
+function codeAddress(cdata) {
+   Array.prototype.forEach.call(cdata, function(data){
+      var address = data.address;
+      geocoder.geocode( { 'address': address}, function(results, status) {
+        if (status == 'OK') {
+          map.setCenter(results[0].geometry.location);
+          var points = {};
+          points.id = data.id;
+          points.lat = map.getCenter().lat();
+          points.lng = map.getCenter().lng();
+          updateCollegeWithLatLng(points);
+        } else {
+          alert('Geocode was not successful for the following reason: ' + status);
+        }
+      });
+  });
+}
+
+function updateCollegeWithLatLng(points) {
+  $.ajax({
+    url:"action.php",
+    method:"post",
+    data: points,
+    success: function(res) {
+      console.log(res)
+    }
+  })
+  
+} -->
+
+
+var map;
+var geocoder;
+
+function loadMap() {
+  var pune = {lat: 18.5204, lng: 73.8567};
+    map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 12,
+      center: pune
+    });
+
+    var marker = new google.maps.Marker({
+      position: pune,
+      map: map
+    });
+
+    var cdata = JSON.parse(document.getElementById('data').innerHTML);
+    geocoder = new google.maps.Geocoder();  
+    codeAddress(cdata);
+  
+    var allData = JSON.parse(document.getElementById('allData').innerHTML);
+    
+    showAllColleges(allData);
+}
+
+function showAllColleges(allData) {
+  var infoWind = new google.maps.InfoWindow;
+  Array.prototype.forEach.call(allData, function(data){
+    var content = document.createElement('div');
+    var strong = document.createElement('strong');
+    
+    strong.textContent = data.store_ref_address;
+    
+    content.appendChild(strong);
+
+    var marker = new google.maps.Marker({
+        position: new google.maps.LatLng(data.location_latitude, data.location_longitude),
+        map: map
+      });
+
+      marker.addListener('mouseover', function(){
+        infoWind.setContent(content);
+        infoWind.open(map, marker);
+      })
+  })
+}
+
+function codeAddress(cdata) {
+   Array.prototype.forEach.call(cdata, function(data){
+      var address = data.store_ref_address;
+      geocoder.geocode( { 'address': address}, function(results, status) {
+        if (status == 'OK') {
+          map.setCenter(results[0].geometry.location);
+          var points = {};
+          updateCollegeWithLatLng(points);
+        } else {
+          alert('Geocode was not successful for the following reason: ' + status);
+        }
+      });
+  });
+}
+
+
+
+<!-- <div class="container">
+        <div class="col-md-3">
+                <?php foreach($str_arr as $row_img){?>
+
+                <div class="item active" style= 'margin-top: 24px;'>
+                    <img src="<?php echo base_url('images/profile/').$row_img ?>" value="<?php echo $row_img?>" alt="Los Angeles" style="width:350px;height:350px;">
+                    <div id='services_id' name='id' value='<?php echo $row['id']?>' ></div>
+                </div>
+                 <button  onclick="myFunction(<?php echo $row['id'] ?>,'<?php echo $row_img ?>');"  class="btn btn-danger btn-xs"></i> Delete </button>
+                    <?php }?>
+                   
+                </div>
+                <?php echo " <td><button type='button' id='btn_service' onclick='update_img(".$sarvice_data[0]['id'].");'  class='btn btn-info btn-lg'>Upload More Image</button><td>";
+                ?>
+               <?php }?>
+        </div>
+    </div> -->

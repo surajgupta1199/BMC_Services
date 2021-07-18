@@ -1,0 +1,1 @@
+$(function(){$("#navigation-top").smartmenus({subMenusSubOffsetX:1,subMenusSubOffsetY:0,keepInViewport:1}),$("#navigation-top").smartmenus("keyboardSetHotkey","32","ctrlKey")});
